@@ -50,37 +50,47 @@ def fix_server_project(server_project, main_module, kitura_net, library_file_pat
     build_file = build_phase.add_file_reference(library_reference)
 end
 
-def fix_client_project(client_project, server_project)
-    #Add server frameworks to client
-    client_target_name_to_fix = "ClientSide"
-    client_target_to_fix = (client_project.targets.select { |target| target.name = client_target_name_to_fix }).first;
+def add_frameworks_to_project(source_project, destination_project_build_phase, destionation_project_embed_frameworks_build_phase, destionation_project_framework_group)
+    frameworks_to_add_references = []
+    source_project.products.each {|p| frameworks_to_add_references.push(p) if p.path.include? 'framework'}
+    frameworks_to_add_references.each do |f|
+        file_reference = Xcodeproj::Project::Object::FileReferencesFactory.new_reference(destionation_project_framework_group, f.path,:built_products)
+        build_file = destionation_project_embed_frameworks_build_phase.add_file_reference(file_reference)
+        destination_project_build_phase.add_file_reference(file_reference)
+        build_file.settings = { 'ATTRIBUTES' => ['CodeSignOnCopy', 'RemoveHeadersOnCopy'] }
+    end
+end
 
-    client_framework_group = client_project.frameworks_group
-    client_framework_build_phase = client_target_to_fix.frameworks_build_phase
+def create_framework_build_phase(project, target_name_to_fix)
+    target_to_fix = (project.targets.select { |target| target.name = target_name_to_fix }).first;
 
-    embed_frameworks_build_phase = client_target_to_fix.build_phases.find {|build_phase| build_phase.to_s == 'Embed Frameworks'}
+    framework_group = project.frameworks_group
+    framework_build_phase = target_to_fix.frameworks_build_phase
+
+    embed_frameworks_build_phase = target_to_fix.build_phases.find {|build_phase| build_phase.to_s == 'Embed Frameworks'}
     if embed_frameworks_build_phase == nil
-        embed_frameworks_build_phase = client_project.new(Xcodeproj::Project::Object::PBXCopyFilesBuildPhase)
+        embed_frameworks_build_phase = project.new(Xcodeproj::Project::Object::PBXCopyFilesBuildPhase)
         embed_frameworks_build_phase.name = 'Embed Frameworks'
         embed_frameworks_build_phase.symbol_dst_subfolder_spec = :frameworks
-        client_target_to_fix.build_phases << embed_frameworks_build_phase
+        target_to_fix.build_phases << embed_frameworks_build_phase
     end
+    return framework_build_phase, embed_frameworks_build_phase, framework_group
+end
 
-    frameworks_to_add_references = []
-    server_project.products.each {|p| frameworks_to_add_references.push(p) if p.path.include? 'framework'}
-    if client_framework_build_phase.files_references.empty?
-        frameworks_to_add_references.each do |f|
-            file_reference = Xcodeproj::Project::Object::FileReferencesFactory.new_reference(client_framework_group, f.path,:built_products)
-            build_file = embed_frameworks_build_phase.add_file_reference(file_reference)
-            client_framework_build_phase.add_file_reference(file_reference)
-            build_file.settings = { 'ATTRIBUTES' => ['CodeSignOnCopy', 'RemoveHeadersOnCopy'] }
-        end
-    end
+def fix_client_project(client_project, server_project, shared_server_client_project, client_target_name_to_fix, shared_server_client_name_to_fix)
+    #Add server frameworks to client
+    client_framework_build_phase, client_embed_frameworks_build_phase, client_framework_group =  create_framework_build_phase(client_project, client_target_name_to_fix)
+    shared_framework_build_phase, shared_embed_frameworks_build_phase, shared_framework_group =  create_framework_build_phase(shared_server_client_project, shared_server_client_name_to_fix)
+
+    add_frameworks_to_project(server_project, client_framework_build_phase, client_embed_frameworks_build_phase, client_framework_group)
+    add_frameworks_to_project(shared_server_client_project, client_framework_build_phase, client_embed_frameworks_build_phase, client_framework_group)
+    add_frameworks_to_project(server_project, shared_framework_build_phase, shared_embed_frameworks_build_phase, shared_framework_group)
 end
 
 server_project_file = ARGV[0];
 main_module = ARGV[1];
 client_project_file = ARGV[2];
+shared_server_client_project_file = ARGV[3];
 
 library_file_path = "../iOSStaticLibraries/Curl/lib/libcurl.a"
 headers_path = "$(PROJECT_DIR)/../iOSStaticLibraries/Curl/include"
@@ -89,9 +99,11 @@ kitura_net = "KituraNet"
 
 server_project = Xcodeproj::Project.open(server_project_file);
 client_project = Xcodeproj::Project.open(client_project_file);
+shared_server_client_project = Xcodeproj::Project.open(shared_server_client_project_file);
 
 fix_server_project(server_project, main_module, kitura_net, library_file_path, headers_path, library_path)
-fix_client_project(client_project, server_project)
+fix_client_project(client_project, server_project, shared_server_client_project, "ClientSide", "SharedServerClient")
 
 server_project.save;
 client_project.save;
+shared_server_client_project.save;
