@@ -62,7 +62,7 @@ def add_frameworks_to_project(source_project, destination_project_build_phase, d
 end
 
 def create_framework_build_phase(project, target_name_to_fix)
-    target_to_fix = (project.targets.select { |target| target.name = target_name_to_fix }).first;
+    target_to_fix = (project.targets.select { |target| target.name == target_name_to_fix }).first;
 
     framework_group = project.frameworks_group
     framework_build_phase = target_to_fix.frameworks_build_phase
