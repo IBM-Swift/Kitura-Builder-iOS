@@ -15,6 +15,19 @@
 gem 'xcodeproj'
 require 'xcodeproj'
 
+def add_copy_file_build_phase(project, target,  symbol_dst_subfolder_spec, resources_dirs)
+    copy_build_phase = project.new(Xcodeproj::Project::Object::PBXCopyFilesBuildPhase)
+    copy_build_phase.symbol_dst_subfolder_spec = symbol_dst_subfolder_spec
+    target.build_phases << copy_build_phase
+
+    resources_dirs.each { |dir|
+        file_reference = Xcodeproj::Project::Object::FileReferencesFactory.new_reference(project.main_group , dir ,:group)
+        file_reference.last_known_file_type = 'folder'
+        build_file = copy_build_phase.add_file_reference(file_reference)
+        build_file.settings = { 'ATTRIBUTES' => ['RemoveHeadersOnCopy'] }
+    }
+end
+
 client_project_file = ARGV[0]
 client_target = "ClientSide"
 resources_dirs = ['ClientSide/Views','ClientSide/public','ClientSide/.build']
@@ -22,16 +35,8 @@ client_project = Xcodeproj::Project.open(client_project_file)
 client_main_group = client_project.main_group
 
 target_to_fix = (client_project.targets.select { |target| target.name == client_target }).first;
-tests_group = client_project.main_group["KituraiOS"]
 
-copy_build_phase = client_project.new(Xcodeproj::Project::Object::PBXCopyFilesBuildPhase)
-copy_build_phase.symbol_dst_subfolder_spec = :frameworks
-target_to_fix.build_phases << copy_build_phase
-
-['ClientSide/public'].each { |dir|
-    file_reference = Xcodeproj::Project::Object::FileReferencesFactory.new_reference(client_main_group, dir ,:project)
-    build_file = copy_build_phase.add_file_reference(file_reference)
-    build_file.settings = { 'ATTRIBUTES' => ['CodeSignOnCopy', 'RemoveHeadersOnCopy'] }
-}
+add_copy_file_build_phase(client_project, target_to_fix,  :resources, ['public', '.build'])
+add_copy_file_build_phase(client_project, target_to_fix,  :executables, ['Views'])
 
 client_project.save
