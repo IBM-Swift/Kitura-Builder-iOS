@@ -21,7 +21,6 @@
 # arm64, armv7, arm7s, i386 and x86_64.
 
 # Setup paths to stuff we need
-
 CURL_SOURCE_DIRECTORY=$1
 OUTPUT_DIRECTORY=$2
 BUILD_DIRECTORY=$3
@@ -120,7 +119,9 @@ lipo \
     -create -output ${OUTPUT_DIRECTORY}/lib/libcurl.a
 RESULT=$?
 
+if [ $RESULT -eq 0 ]; then
 rm -rf "${BUILD_DIRECTORY}/curl-*"
 rm -rf "${BUILD_DIRECTORY}/curl-*.*-log"
+fi
 
 exit $RESULT
