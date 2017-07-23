@@ -28,13 +28,20 @@ fi
 
 OUTPUT_DIRECTORY="$(pwd)/iOSStaticLibraries/Curl"
 BUILD_DIRECTORY="${OUTPUT_DIRECTORY}/.build"
+BUILD_LOGS_DIRECTORY="./CurlBuildLogs"
+
 rm -rf ${OUTPUT_DIRECTORY}
+rm -rf ${BUILD_LOGS_DIRECTORY}
+
 mkdir -p ${BUILD_DIRECTORY}
 mkdir -p ${OUTPUT_DIRECTORY}
 Builder/Scripts/doBuildCurl.sh $CURL_SOURCE_DIRECTORY ${OUTPUT_DIRECTORY} ${BUILD_DIRECTORY}
 if [ $? -ne 0 ]; then
-    rm -rf ${OUTPUT_DIRECTORY};
+    mkdir -p ${BUILD_LOGS_DIRECTORY}
+    cp ${BUILD_DIRECTORY}/*log ${BUILD_LOGS_DIRECTORY}
+    rm -rf ${OUTPUT_DIRECTORY}
     echo "ERROR: Building ${OUTPUT_DIRECTORY} failed."
+    echo "See the logs in ${BUILD_LOGS_DIRECTORY} directory"
     echo "Try curl version 7.43.0 from https://curl.haxx.se/download/ - it worked for us."
     exit 1
 fi
