@@ -19,7 +19,12 @@ endif
 all: openXcode
 
 openXcodeAll: iOSStaticLibraries/Curl ServerSide
+	rm -f ServerSide/.build/checkouts/Kitura-net.git--*/Sources/CHTTPParser/include/module.modulemap
 	@echo --- Generating ServerSide Xcode project
+	cd ServerSide && swift package generate-xcodeproj
+	cp ServerSide/*.xcodeproj/GeneratedModuleMap/CHTTPParser/module.modulemap \
+		ServerSide/.build/checkouts/Kitura-net.git--*/Sources/CHTTPParser/include/
+	# regenerate xcode project with the generated module map
 	cd ServerSide && swift package generate-xcodeproj
 	@echo ——- Fixing ServerSide Xcode project
 	-${KITURA_IOS_BUILD_SCRIPTS_DIR}/fixServerSideXcodeProject.sh ${NUMBER_OF_BITS}
