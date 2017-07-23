@@ -43,9 +43,9 @@ if [ $? -ne 0 ]; then
     echo "ERROR: Building ${OUTPUT_DIRECTORY} failed."
     echo "See the logs in ${BUILD_LOGS_DIRECTORY} directory"
     echo "Try curl version 7.43.0 from https://curl.haxx.se/download/ - it worked for us."
+    echo "Also, remember to run xcode-select --install each time you update your Xcode"
     exit 1
 fi
-
 rm -rf ${OUTPUT_DIRECTORY}/include
 rm -rf ${BUILD_DIRECTORY}
 echo "Succussfully built ${OUTPUT_DIRECTORY}. Now you can run make openXcode"
