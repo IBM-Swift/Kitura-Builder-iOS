@@ -34,14 +34,18 @@ def fix_build_settings_of_target(target, headers_path, library_path)
     append_to_build_setting_all_modes(target,"LIBRARY_SEARCH_PATHS",library_path)
 end
 
+def get_first_target_by_name(project, target_name)
+  (project.targets.select { |target| target.name == target_name }).first
+end
+
 def fix_server_project(server_project, main_module, kitura_net, library_file_path, headers_path, library_path)
-    main_target = (server_project.targets.select { |target| target.name == main_module }).first;
+    main_target = get_first_target_by_name(server_project, main_module)
     main_target.remove_from_project
 
     main_product = (server_project.products.select { |product| product.path == main_module }).first;
     main_product.remove_from_project
 
-    kitura_net_target = (server_project.targets.select { |target| target.name == kitura_net }).first;
+    kitura_net_target = get_first_target_by_name(server_project, kitura_net)
 
     server_project.targets.select { |target|
         target.build_settings('Debug').delete "SUPPORTED_PLATFORMS"
@@ -79,7 +83,7 @@ def add_frameworks_to_project(source_project, destination_project_build_phase, d
 end
 
 def create_framework_build_phase(project, target_name_to_fix)
-    target_to_fix = (project.targets.select { |target| target.name == target_name_to_fix }).first;
+    target_to_fix = get_first_target_by_name(project, target_name_to_fix)
 
     framework_group = project.frameworks_group
     framework_build_phase = target_to_fix.frameworks_build_phase
@@ -103,11 +107,10 @@ def fix_client_project(client_project, server_project, library_file_path, header
     add_frameworks_to_project(shared_server_client_project, client_framework_build_phase, client_embed_frameworks_build_phase, client_framework_group)
     add_frameworks_to_project(server_project, shared_framework_build_phase, shared_embed_frameworks_build_phase, shared_framework_group)
 
-    # refactor the following four lines - extract a method
-    client_target_to_fix = (client_project.targets.select { |target| target.name == client_target_name_to_fix }).first;
+    client_target_to_fix = get_first_target_by_name(client_project, client_target_name_to_fix)
     fix_build_settings_of_target(client_target_to_fix, headers_path, library_path)
 
-    shared_server_client_target_to_fix = (shared_server_client_project.targets.select { |target| target.name == shared_server_client_name_to_fix }).first;
+    shared_server_client_target_to_fix = get_first_target_by_name(shared_server_client_project, shared_server_client_name_to_fix)
     fix_build_settings_of_target(shared_server_client_target_to_fix, headers_path, library_path)
 end
 
