@@ -22,7 +22,7 @@ if [[ ! -d ./ClientSide/public ]]; then
     mkdir ./ClientSide/public
     cp -rf ./ServerSide/public/* ./ClientSide/public
 fi
-if [[ ! -d ./ClientSide/.build/Kitura ]]; then
-    mkdir -p ./ClientSide/.build/Kitura
-    cp -rf ./ServerSide/.build/checkouts/Kitura.git*/. ./ClientSide/.build/Kitura
+if [[ ! -d ./ClientSide/.build/checkouts ]]; then
+    mkdir -p ./ClientSide/.build/checkouts
+    cp -rf ./ServerSide/.build/checkouts/Kitura.git* ./ClientSide/.build/checkouts
 fi
