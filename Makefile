@@ -30,7 +30,7 @@ openXcodeAll: iOSStaticLibraries/Curl ServerSide
 	-${KITURA_IOS_BUILD_SCRIPTS_DIR}/fixServerSideXcodeProject.sh ${NUMBER_OF_BITS}
 	@echo ——- Creating EndToEnd Xcode workspace
 	rm -rf EndToEnd.xcworkspace
-	-ruby ${KITURA_IOS_BUILD_SCRIPTS_DIR}/create_xcode_workspace.rb ClientSide/*.xcodeproj ServerSide/*.xcodeproj
+	-ruby ${KITURA_IOS_BUILD_SCRIPTS_DIR}/create_xcode_workspace.rb ClientSide/*.xcodeproj ServerSide/*.xcodeproj SharedServerClient/*.xcodeproj
 	@echo --- Opening EndToEnd workspace
 	open EndToEnd.xcworkspace
 

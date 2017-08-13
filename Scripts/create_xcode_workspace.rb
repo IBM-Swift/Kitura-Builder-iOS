@@ -19,4 +19,5 @@ workspace_name = 'EndToEnd.xcworkspace';
 workspace = Xcodeproj::Workspace.new(nil);
 workspace << ARGV[0]
 workspace << ARGV[1]
+workspace << ARGV[2]
 workspace.save_as(workspace_name);

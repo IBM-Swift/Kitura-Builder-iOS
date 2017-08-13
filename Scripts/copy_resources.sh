@@ -14,10 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-MAIN_DOT_SWIFT=`find ServerSide/Sources -name main.swift`
-MAIN_MODULE_DIRECTORY=`dirname ${MAIN_DOT_SWIFT}`
-MAIN_MODULE=`basename ${MAIN_MODULE_DIRECTORY}`
-ruby ${KITURA_IOS_BUILD_SCRIPTS_DIR}/fix_xcode_project.rb ServerSide/*.xcodeproj ${MAIN_MODULE} ClientSide/*.xcodeproj SharedServerClient/*.xcodeproj ${1}
-ruby ${KITURA_IOS_BUILD_SCRIPTS_DIR}/copy_tests.rb ClientSide/*.xcodeproj "./ClientSideTests" "ClientSide/KituraiOSTests"
-${KITURA_IOS_BUILD_SCRIPTS_DIR}/copy_resources.sh
-ruby ${KITURA_IOS_BUILD_SCRIPTS_DIR}/copy_resources.rb ClientSide/*.xcodeproj
+if [[ ! -d ./ClientSide/Views ]]; then
+    mkdir ./ClientSide/Views
+    cp -rf ./ServerSide/Views/* ./ClientSide/Views
+fi
+if [[ ! -d ./ClientSide/public ]]; then
+    mkdir ./ClientSide/public
+    cp -rf ./ServerSide/public/* ./ClientSide/public
+fi
+if [[ ! -d ./ClientSide/.build/Kitura ]]; then
+    mkdir -p ./ClientSide/.build/Kitura
+    cp -rf ./ServerSide/.build/checkouts/Kitura.git*/. ./ClientSide/.build/Kitura
+fi
