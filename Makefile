@@ -18,7 +18,7 @@ endif
 
 all: openXcode
 
-openXcodeAll: iOSStaticLibraries/Curl ServerSide
+openXcodeAll: iOSStaticLibraries/Curl ServerSide/Package.swift ClientSide/ClientSide.xcodeproj
 	rm -f ServerSide/.build/checkouts/Kitura-net.git--*/Sources/CHTTPParser/include/module.modulemap
 	@echo --- Generating ServerSide Xcode project
 	cd ServerSide && swift package generate-xcodeproj
@@ -40,7 +40,12 @@ openXcode32:
 openXcode:
 	make NUMBER_OF_BITS="64" openXcodeAll
 
-ServerSide:
+ServerSide/Package.swift:
+	@echo --- Fetching submodules
+	git submodule init
+	git submodule update --remote --merge
+
+ClientSide/ClientSide.xcodeproj:
 	@echo --- Fetching submodules
 	git submodule init
 	git submodule update --remote --merge
