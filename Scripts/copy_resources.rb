@@ -30,13 +30,21 @@ end
 
 client_project_file = ARGV[0]
 client_target = "ClientSide"
-resources_dirs = ['ClientSide/Views','ClientSide/public','ClientSide/.build']
+resources_dirs = ['Views','public','.build']
 client_project = Xcodeproj::Project.open(client_project_file)
 client_main_group = client_project.main_group
 
-target_to_fix = (client_project.targets.select { |target| target.name == client_target }).first;
+all_resource_dirs_found = true
+resources_dirs.each { |resource|
+  if client_main_group.find_file_by_path(resource) === nil
+    all_resource_dirs_found = false
+  end
+}
 
+unless all_resource_dirs_found
+resources_dirs.map! { |dir| "ClientSide/" + dir }
+target_to_fix = (client_project.targets.select { |target| target.name == client_target }).first;
 add_copy_file_build_phase(client_project, target_to_fix,  :resources, ['public', '.build'])
 add_copy_file_build_phase(client_project, target_to_fix,  :executables, ['Views'])
-
 client_project.save
+end
