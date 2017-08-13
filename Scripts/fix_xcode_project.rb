@@ -69,7 +69,9 @@ def add_frameworks_to_project(source_project, destination_project_build_phase, d
           next
         end
 
+
         file_reference = Xcodeproj::Project::Object::FileReferencesFactory.new_reference(destionation_project_framework_group, f.path,:built_products)
+
         build_file = destionation_project_embed_frameworks_build_phase.add_file_reference(file_reference)
         destination_project_build_phase.add_file_reference(file_reference)
         build_file.settings = { 'ATTRIBUTES' => ['CodeSignOnCopy', 'RemoveHeadersOnCopy'] }
@@ -92,7 +94,7 @@ def create_framework_build_phase(project, target_name_to_fix)
     return framework_build_phase, embed_frameworks_build_phase, framework_group
 end
 
-def fix_client_project(client_project, server_project, shared_server_client_project, client_target_name_to_fix, shared_server_client_name_to_fix)
+def fix_client_project(client_project, server_project, library_file_path, headers_path, library_path, shared_server_client_project, client_target_name_to_fix, shared_server_client_name_to_fix)
     #Add server frameworks to client
     client_framework_build_phase, client_embed_frameworks_build_phase, client_framework_group =  create_framework_build_phase(client_project, client_target_name_to_fix)
     shared_framework_build_phase, shared_embed_frameworks_build_phase, shared_framework_group =  create_framework_build_phase(shared_server_client_project, shared_server_client_name_to_fix)
@@ -100,6 +102,13 @@ def fix_client_project(client_project, server_project, shared_server_client_proj
     add_frameworks_to_project(server_project, client_framework_build_phase, client_embed_frameworks_build_phase, client_framework_group)
     add_frameworks_to_project(shared_server_client_project, client_framework_build_phase, client_embed_frameworks_build_phase, client_framework_group)
     add_frameworks_to_project(server_project, shared_framework_build_phase, shared_embed_frameworks_build_phase, shared_framework_group)
+
+    # refactor the following four lines - extract a method
+    client_target_to_fix = (client_project.targets.select { |target| target.name == client_target_name_to_fix }).first;
+    fix_build_settings_of_target(client_target_to_fix, headers_path, library_path)
+
+    shared_server_client_target_to_fix = (shared_server_client_project.targets.select { |target| target.name == shared_server_client_name_to_fix }).first;
+    fix_build_settings_of_target(shared_server_client_target_to_fix, headers_path, library_path)
 end
 
 server_project_file = ARGV[0];
@@ -118,7 +127,7 @@ client_project = Xcodeproj::Project.open(client_project_file);
 shared_server_client_project = Xcodeproj::Project.open(shared_server_client_project_file);
 
 fix_server_project(server_project, main_module, kitura_net, library_file_path, headers_path, library_path)
-fix_client_project(client_project, server_project, shared_server_client_project, "ClientSide", "SharedServerClient")
+fix_client_project(client_project, server_project, library_file_path, headers_path, library_path, shared_server_client_project, "ClientSide", "SharedServerClient")
 
 server_project.save;
 client_project.save;
