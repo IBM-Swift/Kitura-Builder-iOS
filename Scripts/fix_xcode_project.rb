@@ -69,7 +69,6 @@ def add_frameworks_to_project(source_project, destination_project_build_phase, d
     destination_project_frameworks = destination_project_build_phase.file_display_names
     frameworks_to_add_references.each do |f|
         if destination_project_frameworks.include? f.display_name
-          puts f.display_name + "already exist in destination project"
           next
         end
 
