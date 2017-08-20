@@ -29,9 +29,9 @@ Dir.foreach(test_source_dir) do |item|
     next if not client_project["KituraiOSTests"].find_file_by_path(item) === nil
     #full_path = Pathname.new(File.expand_path(item))
     full_path = test_source_dir + "/" + item
-    destionation = Pathname.new(File.expand_path(test_destination_dir + "/" + item))
-    FileUtils.cp(full_path, destionation)
-    file = client_project["KituraiOSTests"].new_file(destionation)
+    destination = Pathname.new(File.expand_path(test_destination_dir + "/" + item))
+    FileUtils.cp(full_path, destination)
+    file = client_project["KituraiOSTests"].new_file(destination)
     target_to_fix.add_file_references([file])
 end
 
