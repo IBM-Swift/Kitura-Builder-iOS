@@ -26,6 +26,7 @@ tests_group = client_project.main_group["KituraiOSTests"]
 
 Dir.foreach(test_source_dir) do |item|
     next if not item.include? "Test"
+    next if not client_project["KituraiOSTests"].find_file_by_path(item) === nil
     #full_path = Pathname.new(File.expand_path(item))
     full_path = test_source_dir + "/" + item
     destionation = Pathname.new(File.expand_path(test_destination_dir + "/" + item))
