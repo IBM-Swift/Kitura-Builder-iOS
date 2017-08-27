@@ -19,11 +19,13 @@ require_relative 'target_helper'
 require_relative 'constants'
 
 def fix_server_project(server_project, main_module, kitura_net, library_file_path, headers_path, library_path)
-    main_target = get_first_target_by_name(server_project, main_module)
-    main_target.remove_from_project
+    unless main_module.empty?
+      main_target = get_first_target_by_name(server_project, main_module)
+      main_target.remove_from_project
 
-    main_product = (server_project.products.select { |product| product.path == main_module }).first;
-    main_product.remove_from_project
+      main_product = (server_project.products.select { |product| product.path == main_module }).first;
+      main_product.remove_from_project
+    end
 
     kitura_net_target = get_first_target_by_name(server_project, kitura_net)
 
