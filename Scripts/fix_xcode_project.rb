@@ -14,25 +14,7 @@
 
 gem 'xcodeproj'
 require 'xcodeproj'
-
-def append_to_build_settings(target,mode,setting,value)
-    if target.build_settings(mode)[setting].kind_of?(Array)
-        target.build_settings(mode)[setting].push(value)
-    else
-        target.build_settings(mode)[setting] = value
-    end
-end
-
-def append_to_build_setting_all_modes(target,setting,value)
-    append_to_build_settings(target,"Release",setting,value)
-    append_to_build_settings(target,"Debug",setting,value)
-end
-
-def fix_build_settings_of_target(target, headers_path, library_path)
-    append_to_build_setting_all_modes(target,"HEADER_SEARCH_PATHS",headers_path)
-    append_to_build_setting_all_modes(target,"OTHER_LDFLAGS","-lz")
-    append_to_build_setting_all_modes(target,"LIBRARY_SEARCH_PATHS",library_path)
-end
+require_relative 'settings_helper'
 
 def get_first_target_by_name(project, target_name)
   (project.targets.select { |target| target.name == target_name }).first
