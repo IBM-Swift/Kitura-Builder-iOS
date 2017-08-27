@@ -15,10 +15,7 @@
 gem 'xcodeproj'
 require 'xcodeproj'
 require_relative 'settings_helper'
-
-def get_first_target_by_name(project, target_name)
-  (project.targets.select { |target| target.name == target_name }).first
-end
+require_relative 'target_helper'
 
 def fix_server_project(server_project, main_module, kitura_net, library_file_path, headers_path, library_path)
     main_target = get_first_target_by_name(server_project, main_module)
