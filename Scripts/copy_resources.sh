@@ -18,12 +18,13 @@ if [[ (-d ./ServerSide/Views) && (! -d ./ClientSide/Views)]]; then
     mkdir ./ClientSide/Views
     cp -rf ./ServerSide/Views/* ./ClientSide/Views
 fi
+
 if [[ (-d ./ServerSide/public) && (! -d ./ClientSide/public) ]]; then
     mkdir ./ClientSide/public
     cp -rf ./ServerSide/public/* ./ClientSide/public
 fi
 
-if [[ (-d ./ServerSide/.build/checkouts/Kitura.git*) && (! -d ./ClientSide/.build/checkouts) ]]; then
+if [[ (-d `ls -d ./ServerSide/.build/checkouts/Kitura.git*`) && (! -d ./ClientSide/.build/checkouts) ]]; then
     mkdir -p ./ClientSide/.build/checkouts
     cp -rf ./ServerSide/.build/checkouts/Kitura.git* ./ClientSide/.build/checkouts
 fi
