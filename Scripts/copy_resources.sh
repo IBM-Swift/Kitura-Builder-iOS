@@ -14,15 +14,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-if [[ ! -d ./ClientSide/Views ]]; then
+if [[ (-d ./ServerSide/Views) && (! -d ./ClientSide/Views)]]; then
     mkdir ./ClientSide/Views
     cp -rf ./ServerSide/Views/* ./ClientSide/Views
 fi
-if [[ ! -d ./ClientSide/public ]]; then
+if [[ (-d ./ServerSide/public) && (! -d ./ClientSide/public) ]]; then
     mkdir ./ClientSide/public
     cp -rf ./ServerSide/public/* ./ClientSide/public
 fi
-if [[ ! -d ./ClientSide/.build/checkouts ]]; then
+
+if [[ (-d ./ServerSide/.build/checkouts/Kitura.git*) && (! -d ./ClientSide/.build/checkouts) ]]; then
     mkdir -p ./ClientSide/.build/checkouts
     cp -rf ./ServerSide/.build/checkouts/Kitura.git* ./ClientSide/.build/checkouts
 fi
