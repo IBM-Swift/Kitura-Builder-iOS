@@ -14,17 +14,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-if [[ (-d ./ServerSide/Views) && (! -d ./ClientSide/Views)]]; then
+if [[ ! -d ./ClientSide/Views ]]; then
     mkdir ./ClientSide/Views
-    cp -rf ./ServerSide/Views/* ./ClientSide/Views
+    if [[ -d ./ServerSide/Views ]]; then
+        cp -rf ./ServerSide/Views/* ./ClientSide/Views
+    fi
 fi
 
-if [[ (-d ./ServerSide/public) && (! -d ./ClientSide/public) ]]; then
+if [[ ! -d ./ClientSide/public ]]; then
     mkdir ./ClientSide/public
-    cp -rf ./ServerSide/public/* ./ClientSide/public
+    if [[ -d ./ServerSide/public ]]; then
+        cp -rf ./ServerSide/public/* ./ClientSide/public
+    fi
 fi
 
-if [[ (-d `ls -d ./ServerSide/.build/checkouts/Kitura.git*`) && (! -d ./ClientSide/.build/checkouts) ]]; then
+if [[ ! -d ./ClientSide/.build/checkouts ]]; then
     mkdir -p ./ClientSide/.build/checkouts
-    cp -rf ./ServerSide/.build/checkouts/Kitura.git* ./ClientSide/.build/checkouts
+    if [[ -d `ls -d ./ServerSide/.build/checkouts/Kitura.git*` ]]; then
+        cp -rf ./ServerSide/.build/checkouts/Kitura.git* ./ClientSide/.build/checkouts
+    fi
 fi
