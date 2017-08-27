@@ -18,30 +18,6 @@ require_relative 'settings_helper'
 require_relative 'target_helper'
 require_relative 'frameworks_helper'
 
-def fix_server_project(server_project, main_module, kitura_net, library_file_path, headers_path, library_path)
-    main_target = get_first_target_by_name(server_project, main_module)
-    main_target.remove_from_project
-
-    main_product = (server_project.products.select { |product| product.path == main_module }).first;
-    main_product.remove_from_project
-
-    kitura_net_target = get_first_target_by_name(server_project, kitura_net)
-
-    server_project.targets.select { |target|
-        target.build_settings('Debug').delete "SUPPORTED_PLATFORMS"
-        target.build_settings('Release').delete "SUPPORTED_PLATFORMS"
-    }
-
-    #Add headers
-    fix_build_settings_of_target(kitura_net_target, headers_path, library_path)
-
-    #Add library
-    build_phase = kitura_net_target.frameworks_build_phase
-    framework_group = server_project.frameworks_group
-    library_reference = framework_group.new_reference(library_file_path)
-    build_file = build_phase.add_file_reference(library_reference)
-end
-
 def fix_client_project(client_project, server_project, library_file_path, headers_path, library_path, shared_server_client_project, client_target_name_to_fix, shared_server_client_name_to_fix)
     #Add server frameworks to client
     client_framework_build_phase, client_embed_frameworks_build_phase, client_framework_group =  create_framework_build_phase(client_project, client_target_name_to_fix)
@@ -73,7 +49,6 @@ server_project = Xcodeproj::Project.open(server_project_file);
 client_project = Xcodeproj::Project.open(client_project_file);
 shared_server_client_project = Xcodeproj::Project.open(shared_server_client_project_file);
 
-fix_server_project(server_project, main_module, kitura_net, library_file_path, headers_path, library_path)
 fix_client_project(client_project, server_project, library_file_path, headers_path, library_path, shared_server_client_project, "ClientSide", "SharedServerClient")
 
 server_project.save;
