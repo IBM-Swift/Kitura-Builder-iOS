@@ -26,8 +26,8 @@ openXcodeAll: iOSStaticLibraries/Curl ServerSide/Package.swift ClientSide/Client
 		ServerSide/.build/checkouts/Kitura-net.git--*/Sources/CHTTPParser/include/
 # regenerate xcode project with the generated module map
 	cd ServerSide && swift package generate-xcodeproj
-	@echo ——- Fixing ServerSide Xcode project
-	-${KITURA_IOS_BUILD_SCRIPTS_DIR}/fixServerSideXcodeProject.sh ${NUMBER_OF_BITS}
+	@echo ——- Fixing Xcode projects
+	-${KITURA_IOS_BUILD_SCRIPTS_DIR}/fixXcodeProjects.sh ${NUMBER_OF_BITS}
 	@echo ——- Creating EndToEnd Xcode workspace
 	rm -rf EndToEnd.xcworkspace
 	-ruby ${KITURA_IOS_BUILD_SCRIPTS_DIR}/create_xcode_workspace.rb ClientSide/*.xcodeproj ServerSide/*.xcodeproj SharedServerClient/*.xcodeproj
