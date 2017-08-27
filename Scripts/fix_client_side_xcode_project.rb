@@ -19,14 +19,18 @@ require_relative 'target_helper'
 require_relative 'frameworks_helper'
 require_relative 'constants'
 
-def fix_client_project(client_project, server_project, library_file_path, headers_path, library_path, shared_server_client_project, client_target_name_to_fix)
-    client_framework_build_phase, client_embed_frameworks_build_phase, client_framework_group =  create_framework_build_phase(client_project, client_target_name_to_fix)
+def fix_client_project(client_project, server_project, shared_server_client_project,
+                       library_file_path, headers_path, library_path, client_target_name_to_fix)
+  client_framework_build_phase, client_embed_frameworks_build_phase, client_framework_group =
+      create_framework_build_phase(client_project, client_target_name_to_fix)
 
-    add_frameworks_to_project(server_project, client_framework_build_phase, client_embed_frameworks_build_phase, client_framework_group)
-    add_frameworks_to_project(shared_server_client_project, client_framework_build_phase, client_embed_frameworks_build_phase, client_framework_group)
+  add_frameworks_to_project(server_project, client_framework_build_phase,
+                            client_embed_frameworks_build_phase, client_framework_group)
+  add_frameworks_to_project(shared_server_client_project, client_framework_build_phase,
+                            client_embed_frameworks_build_phase, client_framework_group)
 
-    client_target_to_fix = get_first_target_by_name(client_project, client_target_name_to_fix)
-    fix_build_settings_of_target(client_target_to_fix, headers_path, library_path)
+  client_target_to_fix = get_first_target_by_name(client_project, client_target_name_to_fix)
+  fix_build_settings_of_target(client_target_to_fix, headers_path, library_path)
 end
 
 server_project_file = ARGV[0];
@@ -38,8 +42,8 @@ server_project = Xcodeproj::Project.open(server_project_file);
 client_project = Xcodeproj::Project.open(client_project_file);
 shared_server_client_project = Xcodeproj::Project.open(shared_server_client_project_file);
 
-fix_client_project(client_project, server_project, Constants::LIBRARY_FILE_PATH,
-                   Constants::get_headers_path(number_of_bits), Constants::LIBRARY_PATH,
-                   shared_server_client_project, Constants::CLIENT_SIDE_MAIN_TARGET)
+fix_client_project(client_project, server_project, shared_server_client_project,
+                   Constants::LIBRARY_FILE_PATH, Constants::get_headers_path(number_of_bits),
+                   Constants::LIBRARY_PATH, Constants::CLIENT_SIDE_MAIN_TARGET)
 
 client_project.save;
