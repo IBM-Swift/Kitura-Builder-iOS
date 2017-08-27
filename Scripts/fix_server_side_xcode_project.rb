@@ -16,6 +16,7 @@ gem 'xcodeproj'
 require 'xcodeproj'
 require_relative 'settings_helper'
 require_relative 'target_helper'
+require_relative 'constants'
 
 def fix_server_project(server_project, main_module, kitura_net, library_file_path, headers_path, library_path)
     main_target = get_first_target_by_name(server_project, main_module)
@@ -45,11 +46,7 @@ server_project_file = ARGV[0];
 main_module = ARGV[1];
 number_of_bits = ARGV[2];
 
-library_file_path = "../iOSStaticLibraries/Curl/lib/libcurl.a"
-headers_path = "$(PROJECT_DIR)/../iOSStaticLibraries/Curl/include" + "-" + number_of_bits
-library_path= "$(PROJECT_DIR)/../iOSStaticLibraries/Curl/lib"
-kitura_net = "KituraNet"
-
 server_project = Xcodeproj::Project.open(server_project_file);
-fix_server_project(server_project, main_module, kitura_net, library_file_path, headers_path, library_path)
+fix_server_project(server_project, main_module, Constants::KITURA_NET, Constants::LIBRARY_FILE_PATH,
+                   Constants::get_headers_path(number_of_bits), Constants::LIBRARY_PATH)
 server_project.save;

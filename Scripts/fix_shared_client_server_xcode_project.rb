@@ -17,6 +17,7 @@ require 'xcodeproj'
 require_relative 'settings_helper'
 require_relative 'target_helper'
 require_relative 'frameworks_helper'
+require_relative 'constants'
 
 def fix_shared_client_server_project(shared_server_client_project, server_project, library_file_path, headers_path, library_path, shared_server_client_name_to_fix)
     shared_framework_build_phase, shared_embed_frameworks_build_phase, shared_framework_group =  create_framework_build_phase(shared_server_client_project, shared_server_client_name_to_fix)
@@ -30,13 +31,10 @@ server_project_file = ARGV[0];
 shared_server_client_project_file = ARGV[1];
 number_of_bits = ARGV[2];
 
-library_file_path = "../iOSStaticLibraries/Curl/lib/libcurl.a"
-headers_path = "$(PROJECT_DIR)/../iOSStaticLibraries/Curl/include" + "-" + number_of_bits
-library_path= "$(PROJECT_DIR)/../iOSStaticLibraries/Curl/lib"
-kitura_net = "KituraNet"
-
 server_project = Xcodeproj::Project.open(server_project_file);
 shared_server_client_project = Xcodeproj::Project.open(shared_server_client_project_file);
 
-fix_shared_client_server_project(shared_server_client_project, server_project, library_file_path, headers_path, library_path, "SharedServerClient")
+fix_shared_client_server_project(shared_server_client_project, server_project, Constants::LIBRARY_FILE_PATH,
+                   Constants::get_headers_path(number_of_bits), Constants::LIBRARY_PATH,
+                   Constants::SHARED_SERVER_CLIENT_SIDE_MAIN_TARGET)
 shared_server_client_project.save;
