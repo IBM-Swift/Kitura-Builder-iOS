@@ -19,7 +19,7 @@ MAIN_MODULE_DIRECTORY=`dirname ${MAIN_DOT_SWIFT}`
 MAIN_MODULE=`basename ${MAIN_MODULE_DIRECTORY}`
 ruby ${KITURA_IOS_BUILD_SCRIPTS_DIR}/fix_server_side_xcode_project.rb ServerSide/*.xcodeproj ${MAIN_MODULE} ${1}
 
-ruby ${KITURA_IOS_BUILD_SCRIPTS_DIR}/fix_xcode_project.rb ServerSide/*.xcodeproj ${MAIN_MODULE} ClientSide/*.xcodeproj SharedServerClient/*.xcodeproj ${1}
+ruby ${KITURA_IOS_BUILD_SCRIPTS_DIR}/fix_xcode_project.rb ServerSide/*.xcodeproj ClientSide/*.xcodeproj SharedServerClient/*.xcodeproj ${1}
 ruby ${KITURA_IOS_BUILD_SCRIPTS_DIR}/fix_shared_client_server_xcode_project.rb ServerSide/*.xcodeproj SharedServerClient/*.xcodeproj ${1}
 
 ruby ${KITURA_IOS_BUILD_SCRIPTS_DIR}/copy_tests.rb ClientSide/*.xcodeproj "./ClientSideTests" "ClientSide/KituraiOSTests"

@@ -18,27 +18,20 @@ require_relative 'settings_helper'
 require_relative 'target_helper'
 require_relative 'frameworks_helper'
 
-def fix_client_project(client_project, server_project, library_file_path, headers_path, library_path, shared_server_client_project, client_target_name_to_fix, shared_server_client_name_to_fix)
-    #Add server frameworks to client
+def fix_client_project(client_project, server_project, library_file_path, headers_path, library_path, shared_server_client_project, client_target_name_to_fix)
     client_framework_build_phase, client_embed_frameworks_build_phase, client_framework_group =  create_framework_build_phase(client_project, client_target_name_to_fix)
-    shared_framework_build_phase, shared_embed_frameworks_build_phase, shared_framework_group =  create_framework_build_phase(shared_server_client_project, shared_server_client_name_to_fix)
 
     add_frameworks_to_project(server_project, client_framework_build_phase, client_embed_frameworks_build_phase, client_framework_group)
     add_frameworks_to_project(shared_server_client_project, client_framework_build_phase, client_embed_frameworks_build_phase, client_framework_group)
-    add_frameworks_to_project(server_project, shared_framework_build_phase, shared_embed_frameworks_build_phase, shared_framework_group)
 
     client_target_to_fix = get_first_target_by_name(client_project, client_target_name_to_fix)
     fix_build_settings_of_target(client_target_to_fix, headers_path, library_path)
-
-    shared_server_client_target_to_fix = get_first_target_by_name(shared_server_client_project, shared_server_client_name_to_fix)
-    fix_build_settings_of_target(shared_server_client_target_to_fix, headers_path, library_path)
 end
 
 server_project_file = ARGV[0];
-main_module = ARGV[1];
-client_project_file = ARGV[2];
-shared_server_client_project_file = ARGV[3];
-number_of_bits = ARGV[4];
+client_project_file = ARGV[1];
+shared_server_client_project_file = ARGV[2];
+number_of_bits = ARGV[3];
 
 library_file_path = "../iOSStaticLibraries/Curl/lib/libcurl.a"
 headers_path = "$(PROJECT_DIR)/../iOSStaticLibraries/Curl/include" + "-" + number_of_bits
@@ -49,8 +42,6 @@ server_project = Xcodeproj::Project.open(server_project_file);
 client_project = Xcodeproj::Project.open(client_project_file);
 shared_server_client_project = Xcodeproj::Project.open(shared_server_client_project_file);
 
-fix_client_project(client_project, server_project, library_file_path, headers_path, library_path, shared_server_client_project, "ClientSide", "SharedServerClient")
+fix_client_project(client_project, server_project, library_file_path, headers_path, library_path, shared_server_client_project, "ClientSide")
 
-server_project.save;
 client_project.save;
-shared_server_client_project.save;
