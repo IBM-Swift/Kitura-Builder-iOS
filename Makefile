@@ -16,9 +16,9 @@ ifndef KITURA_IOS_BUILD_SCRIPTS_DIR
 KITURA_IOS_BUILD_SCRIPTS_DIR = Scripts
 endif
 
-all: openXcode
+all: prepareXcode
 
-openXcodeAll: iOSStaticLibraries/Curl ServerSide/Package.swift ClientSide/ClientSide.xcodeproj
+prepareXcodeAll: iOSStaticLibraries/Curl ServerSide/Package.swift ClientSide/ClientSide.xcodeproj
 	rm -f ServerSide/.build/checkouts/Kitura-net.git--*/Sources/CHTTPParser/include/module.modulemap
 	@echo --- Generating ServerSide Xcode project
 	cd ServerSide && swift package generate-xcodeproj
@@ -31,14 +31,18 @@ openXcodeAll: iOSStaticLibraries/Curl ServerSide/Package.swift ClientSide/Client
 	@echo ——- Creating EndToEnd Xcode workspace
 	rm -rf EndToEnd.xcworkspace
 	-ruby ${KITURA_IOS_BUILD_SCRIPTS_DIR}/create_xcode_workspace.rb ClientSide/*.xcodeproj ServerSide/*.xcodeproj SharedServerClient/*.xcodeproj
-	@echo --- Opening EndToEnd workspace
+
+prepareXcode32:
+	make NUMBER_OF_BITS="32" prepareXcodeAll
+
+prepareXcode:
+	make NUMBER_OF_BITS="64" prepareXcodeAll
+
+openXcode32: prepareXcode32
 	open EndToEnd.xcworkspace
 
-openXcode32:
-	make NUMBER_OF_BITS="32" openXcodeAll
-
-openXcode:
-	make NUMBER_OF_BITS="64" openXcodeAll
+openXcode: prepareXcode
+	open EndToEnd.xcworkspace
 
 ServerSide/Package.swift:
 	@echo --- Fetching submodules
@@ -55,4 +59,4 @@ iOSStaticLibraries/Curl:
 	@echo "You can download curl source from https://curl.haxx.se/download/"
 	exit 1
 
-.PHONY: openXcode
+.PHONY: prepareXcode prepareXcode32 openXcode openXcode32
