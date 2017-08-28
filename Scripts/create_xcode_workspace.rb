@@ -21,3 +21,7 @@ workspace << ARGV[0]
 workspace << ARGV[1]
 workspace << ARGV[2]
 workspace.save_as(workspace_name);
+
+workspace = Xcodeproj::Workspace::new_from_xcworkspace(workspace_name);
+workspace.load_schemes(workspace_name);
+workspace.save_as(workspace_name);
