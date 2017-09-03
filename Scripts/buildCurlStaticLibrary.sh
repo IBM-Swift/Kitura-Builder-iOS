@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+set -x
+
 CURL_SOURCE_DIRECTORY=$1
 
 if [ "$#" -ne 1 ]; then

@@ -20,6 +20,7 @@
 # curl ${CURL_VERSION} for iOS 7.1 that contains code for
 # arm64, armv7, arm7s, i386 and x86_64.
 
+set -x
 # Setup paths to stuff we need
 CURL_SOURCE_DIRECTORY=$1
 OUTPUT_DIRECTORY=$2
