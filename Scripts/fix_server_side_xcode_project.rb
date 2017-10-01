@@ -51,7 +51,7 @@ def fix_server_project(server_project, main_module, kitura_net, libraries)
   build_phase = kitura_net_target.frameworks_build_phase
   framework_group = server_project.frameworks_group
   library_reference = framework_group.new_reference(libraries.library_file_path)
-  build_file = build_phase.add_file_reference(library_reference)
+  build_phase.add_file_reference(library_reference)
 end
 
 server_project_file = ARGV[0];
