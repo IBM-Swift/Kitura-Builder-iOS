@@ -19,30 +19,39 @@ require_relative 'target_helper'
 require_relative 'constants'
 require_relative 'libraries'
 
-def fix_server_project(server_project, main_module, kitura_net, libraries)
-    unless main_module.empty?
-      main_target = get_first_target_by_name(server_project, main_module)
-      main_target.remove_from_project
-
-      main_product = (server_project.products.select { |product| product.path == main_module }).first;
-      main_product.remove_from_project
+def remove_target(project, moduleName)
+    unless moduleName.empty?
+      target = get_first_target_by_name(project, moduleName)
+      target.remove_from_project
     end
+end
 
-    kitura_net_target = get_first_target_by_name(server_project, kitura_net)
+def remove_product(project, moduleName)
+    unless moduleName.empty?
+      product = (project.products.select { |product| product.path == moduleName }).first;
+      product.remove_from_project
+    end
+end
 
-    server_project.targets.select { |target|
-        target.build_settings('Debug').delete "SUPPORTED_PLATFORMS"
-        target.build_settings('Release').delete "SUPPORTED_PLATFORMS"
-    }
+def fix_server_project(server_project, main_module, kitura_net, libraries)
+  remove_target(server_project, main_module)
+  remove_product(server_project, main_module)
 
-    #Add headers
-    fix_build_settings_of_target(kitura_net_target, libraries.headers_path, libraries.library_path)
+  kitura_net_target = get_first_target_by_name(server_project, kitura_net)
 
-    #Add library
-    build_phase = kitura_net_target.frameworks_build_phase
-    framework_group = server_project.frameworks_group
-    library_reference = framework_group.new_reference(libraries.library_file_path)
-    build_file = build_phase.add_file_reference(library_reference)
+  server_project.targets.select { |target|
+    target.build_settings('Debug').delete "SUPPORTED_PLATFORMS"
+    target.build_settings('Release').delete "SUPPORTED_PLATFORMS"
+  }
+
+  #Add headers
+  fix_build_settings_of_target(kitura_net_target, libraries.headers_path, libraries.library_path)
+
+  #Add library
+  build_phase = kitura_net_target.frameworks_build_phase
+  framework_group = server_project.frameworks_group
+  library_reference = framework_group.new_reference(libraries.library_file_path)
+  build_file = build_phase.add_file_reference(library_reference)
 end
 
 server_project_file = ARGV[0];
