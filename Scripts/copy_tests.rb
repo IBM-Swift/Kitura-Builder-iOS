@@ -21,7 +21,7 @@ test_source_dir = ARGV[1]
 test_destination_dir = ARGV[2]
 client_project = Xcodeproj::Project.open(client_project_file)
 
-target_to_fix = (client_project.targets.select { |target| target.name == test_target }).first;
+target_to_fix = (client_project.targets.select { |target| target.name == test_target }).first
 
 Dir.foreach(test_source_dir) do |item|
     next if not item.include? "Test"

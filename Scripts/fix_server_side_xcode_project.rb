@@ -28,7 +28,7 @@ end
 
 def remove_product(project, moduleName)
     unless moduleName.empty?
-      productToRemove = (project.products.select { |product| product.path == moduleName }).first;
+      productToRemove = (project.products.select { |product| product.path == moduleName }).first
       productToRemove.remove_from_project
     end
 end
@@ -54,10 +54,10 @@ def fix_server_project(server_project, main_module, kitura_net, libraries)
   build_phase.add_file_reference(library_reference)
 end
 
-server_project_file = ARGV[0];
-main_module = ARGV[1];
-number_of_bits = ARGV[2];
+server_project_file = ARGV[0]
+main_module = ARGV[1]
+number_of_bits = ARGV[2]
 
-server_project = Xcodeproj::Project.open(server_project_file);
+server_project = Xcodeproj::Project.open(server_project_file)
 fix_server_project(server_project, main_module, Constants::KITURA_NET, Libraries.new(number_of_bits))
-server_project.save;
+server_project.save

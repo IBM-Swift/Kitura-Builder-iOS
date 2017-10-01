@@ -43,7 +43,7 @@ resources_dirs.each { |resource|
 
 unless all_resource_dirs_found
 resources_dirs.map! { |dir| "ClientSide/" + dir }
-target_to_fix = (client_project.targets.select { |target| target.name == client_target }).first;
+target_to_fix = (client_project.targets.select { |target| target.name == client_target }).first
 add_copy_file_build_phase(client_project, target_to_fix,  :resources, ['public', '.build'])
 add_copy_file_build_phase(client_project, target_to_fix,  :executables, ['Views'])
 client_project.save

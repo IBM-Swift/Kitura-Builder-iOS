@@ -35,16 +35,15 @@ def fix_client_project(client_project, server_project, shared_server_client_proj
   fix_build_settings_of_target(client_target_to_fix, libraries.headers_path, libraries.library_path)
 end
 
-server_project_file = ARGV[0];
-client_project_file = ARGV[1];
-shared_server_client_project_file = ARGV[2];
-number_of_bits = ARGV[3];
+server_project_file = ARGV[0]
+client_project_file = ARGV[1]
+shared_server_client_project_file = ARGV[2]
+number_of_bits = ARGV[3]
 
-server_project = Xcodeproj::Project.open(server_project_file);
-client_project = Xcodeproj::Project.open(client_project_file);
-shared_server_client_project = Xcodeproj::Project.open(shared_server_client_project_file);
+server_project = Xcodeproj::Project.open(server_project_file)
+client_project = Xcodeproj::Project.open(client_project_file)
+shared_server_client_project = Xcodeproj::Project.open(shared_server_client_project_file)
 
 fix_client_project(client_project, server_project, shared_server_client_project,
                    Libraries.new(number_of_bits))
-
-client_project.save;
+client_project.save
