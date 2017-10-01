@@ -22,8 +22,9 @@ require_relative 'libraries'
 
 def fix_client_project(client_project, server_project, shared_server_client_project,
                        libraries)
+  client_target_name_to_fix = Constants::CLIENT_SIDE_MAIN_TARGET
   client_framework_build_phase, client_embed_frameworks_build_phase, client_framework_group =
-      create_framework_build_phase(client_project, Constants::CLIENT_SIDE_MAIN_TARGET)
+      create_framework_build_phase(client_project, client_target_name_to_fix)
 
   add_frameworks_to_project(server_project, client_framework_build_phase,
                             client_embed_frameworks_build_phase, client_framework_group)
