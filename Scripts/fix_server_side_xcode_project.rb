@@ -28,8 +28,8 @@ end
 
 def remove_product(project, moduleName)
     unless moduleName.empty?
-      product = (project.products.select { |product| product.path == moduleName }).first;
-      product.remove_from_project
+      productToRemove = (project.products.select { |product| product.path == moduleName }).first;
+      productToRemove.remove_from_project
     end
 end
 
