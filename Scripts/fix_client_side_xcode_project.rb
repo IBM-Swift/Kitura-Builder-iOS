@@ -21,9 +21,9 @@ require_relative 'constants'
 require_relative 'libraries'
 
 def fix_client_project(client_project, server_project, shared_server_client_project,
-                       libraries, client_target_name_to_fix)
+                       libraries)
   client_framework_build_phase, client_embed_frameworks_build_phase, client_framework_group =
-      create_framework_build_phase(client_project, client_target_name_to_fix)
+      create_framework_build_phase(client_project, Constants::CLIENT_SIDE_MAIN_TARGET)
 
   add_frameworks_to_project(server_project, client_framework_build_phase,
                             client_embed_frameworks_build_phase, client_framework_group)
@@ -44,6 +44,6 @@ client_project = Xcodeproj::Project.open(client_project_file);
 shared_server_client_project = Xcodeproj::Project.open(shared_server_client_project_file);
 
 fix_client_project(client_project, server_project, shared_server_client_project,
-                   Libraries.new(number_of_bits), Constants::CLIENT_SIDE_MAIN_TARGET)
+                   Libraries.new(number_of_bits))
 
 client_project.save;
