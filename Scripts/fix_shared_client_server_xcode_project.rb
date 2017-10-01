@@ -18,13 +18,19 @@ require_relative 'settings_helper'
 require_relative 'target_helper'
 require_relative 'frameworks_helper'
 require_relative 'constants'
+require_relative 'libraries'
 
-def fix_shared_client_server_project(shared_server_client_project, server_project, library_file_path, headers_path, library_path, shared_server_client_name_to_fix)
-    shared_framework_build_phase, shared_embed_frameworks_build_phase, shared_framework_group =  create_framework_build_phase(shared_server_client_project, shared_server_client_name_to_fix)
-    add_frameworks_to_project(server_project, shared_framework_build_phase, shared_embed_frameworks_build_phase, shared_framework_group)
+def fix_shared_client_server_project(shared_server_client_project, server_project, libraries,
+                                     shared_server_client_name_to_fix)
+  shared_framework_build_phase, shared_embed_frameworks_build_phase, shared_framework_group =
+    create_framework_build_phase(shared_server_client_project, shared_server_client_name_to_fix)
+  add_frameworks_to_project(server_project, shared_framework_build_phase,
+                            shared_embed_frameworks_build_phase, shared_framework_group)
 
-    shared_server_client_target_to_fix = get_first_target_by_name(shared_server_client_project, shared_server_client_name_to_fix)
-    fix_build_settings_of_target(shared_server_client_target_to_fix, headers_path, library_path)
+  shared_server_client_target_to_fix =
+    get_first_target_by_name(shared_server_client_project, shared_server_client_name_to_fix)
+  fix_build_settings_of_target(shared_server_client_target_to_fix, libraries.headers_path,
+                               libraries.library_path)
 end
 
 server_project_file = ARGV[0];
@@ -34,7 +40,7 @@ number_of_bits = ARGV[2];
 server_project = Xcodeproj::Project.open(server_project_file);
 shared_server_client_project = Xcodeproj::Project.open(shared_server_client_project_file);
 
-fix_shared_client_server_project(shared_server_client_project, server_project, Constants::LIBRARY_FILE_PATH,
-                   Constants::get_headers_path(number_of_bits), Constants::LIBRARY_PATH,
-                   Constants::SHARED_SERVER_CLIENT_SIDE_MAIN_TARGET)
+fix_shared_client_server_project(shared_server_client_project, server_project,
+                                 Libraries.new(number_of_bits),
+                                 Constants::SHARED_SERVER_CLIENT_SIDE_MAIN_TARGET);
 shared_server_client_project.save;

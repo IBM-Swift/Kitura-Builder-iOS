@@ -17,8 +17,9 @@ require 'xcodeproj'
 require_relative 'settings_helper'
 require_relative 'target_helper'
 require_relative 'constants'
+require_relative 'libraries'
 
-def fix_server_project(server_project, main_module, kitura_net, library_file_path, headers_path, library_path)
+def fix_server_project(server_project, main_module, kitura_net, libraries)
     unless main_module.empty?
       main_target = get_first_target_by_name(server_project, main_module)
       main_target.remove_from_project
@@ -35,12 +36,12 @@ def fix_server_project(server_project, main_module, kitura_net, library_file_pat
     }
 
     #Add headers
-    fix_build_settings_of_target(kitura_net_target, headers_path, library_path)
+    fix_build_settings_of_target(kitura_net_target, libraries.headers_path, libraries.library_path)
 
     #Add library
     build_phase = kitura_net_target.frameworks_build_phase
     framework_group = server_project.frameworks_group
-    library_reference = framework_group.new_reference(library_file_path)
+    library_reference = framework_group.new_reference(libraries.library_file_path)
     build_file = build_phase.add_file_reference(library_reference)
 end
 
@@ -49,6 +50,5 @@ main_module = ARGV[1];
 number_of_bits = ARGV[2];
 
 server_project = Xcodeproj::Project.open(server_project_file);
-fix_server_project(server_project, main_module, Constants::KITURA_NET, Constants::LIBRARY_FILE_PATH,
-                   Constants::get_headers_path(number_of_bits), Constants::LIBRARY_PATH)
+fix_server_project(server_project, main_module, Constants::KITURA_NET, Libraries.new(number_of_bits))
 server_project.save;
