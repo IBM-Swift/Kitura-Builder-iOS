@@ -40,8 +40,9 @@ def fix_server_project(server_project, main_module, kitura_net, libraries)
   kitura_net_target = get_first_target_by_name(server_project, kitura_net)
 
   server_project.targets.select { |target|
-    target.build_settings('Debug').delete "SUPPORTED_PLATFORMS"
-    target.build_settings('Release').delete "SUPPORTED_PLATFORMS"
+    target.build_configuration_list.build_configurations.each { |configuration|
+      configuration.build_settings.delete "SUPPORTED_PLATFORMS"
+    }
   }
 
   #Add headers
