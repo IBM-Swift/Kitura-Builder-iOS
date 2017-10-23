@@ -24,8 +24,9 @@ def append_to_build_settings(target,mode,setting,value)
 end
 
 def append_to_build_setting_all_modes(target,setting,value)
-    append_to_build_settings(target,"Release",setting,value)
-    append_to_build_settings(target,"Debug",setting,value)
+    target.build_configuration_list.build_configurations.each { |configuration|
+      append_to_build_settings(target,configuration.name,setting,value)
+    }
 end
 
 def fix_build_settings_of_target(target, headers_path, library_path)
