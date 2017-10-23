@@ -24,8 +24,15 @@ end
 
 project = Xcodeproj::Project.open(project_file)
 
-project.build_configurations.each do |configuration|
+fixConfiguration = lambda { |configuration|
   configuration.build_settings["IPHONEOS_DEPLOYMENT_TARGET"] = version
-end
+}
+
+project.build_configurations.each &fixConfiguration
+
+project.targets.each { |target|
+  target.build_configurations.each &fixConfiguration
+}
+
 
 project.save
