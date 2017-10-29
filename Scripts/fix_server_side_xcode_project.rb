@@ -39,11 +39,11 @@ def fix_server_project(server_project, main_module, kitura_net, libraries)
 
   kitura_net_target = get_first_target_by_name(server_project, kitura_net)
 
-  server_project.targets.select { |target|
-    target.build_configuration_list.build_configurations.each { |configuration|
-      configuration.build_settings.delete "SUPPORTED_PLATFORMS"
-    }
-  }
+  server_project.targets.select do |target|
+    target.build_configuration_list.build_configurations.each do |configuration|
+      configuration.build_settings.delete('SUPPORTED_PLATFORMS')
+    end
+  end
 
   #Add headers
   fix_build_settings_of_target(kitura_net_target, libraries.headers_path, libraries.library_path)
@@ -61,4 +61,5 @@ number_of_bits = ARGV[2]
 
 server_project = Xcodeproj::Project.open(server_project_file)
 fix_server_project(server_project, main_module, Constants::KITURA_NET, Libraries.new(number_of_bits))
+
 server_project.save

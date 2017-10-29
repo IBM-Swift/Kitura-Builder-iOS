@@ -16,5 +16,5 @@ gem 'xcodeproj'
 require 'xcodeproj'
 
 def get_first_target_by_name(project, target_name)
-  (project.targets.select { |target| target.name == target_name }).first
+  project.targets.select { |target| target.name == target_name }.first
 end

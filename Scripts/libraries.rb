@@ -30,6 +30,6 @@ class Libraries
   end
 
   def headers_path
-    Constants::get_headers_path(@number_of_bits)
+    Constants.get_headers_path(@number_of_bits)
   end
 end

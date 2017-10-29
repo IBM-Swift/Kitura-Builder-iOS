@@ -13,13 +13,13 @@
 # limitations under the License.
 
 class Constants
-  LIBRARY_FILE_PATH = "../iOSStaticLibraries/Curl/lib/libcurl.a"
+  LIBRARY_FILE_PATH = '../iOSStaticLibraries/Curl/lib/libcurl.a'
   LIBRARY_PATH  = "$(PROJECT_DIR)/../iOSStaticLibraries/Curl/lib"
-  KITURA_NET = "KituraNet"
-  CLIENT_SIDE_MAIN_TARGET = "ClientSide"
-  SHARED_SERVER_CLIENT_SIDE_MAIN_TARGET = "SharedServerClient"
+  KITURA_NET = 'KituraNet'
+  CLIENT_SIDE_MAIN_TARGET = 'ClientSide'
+  SHARED_SERVER_CLIENT_SIDE_MAIN_TARGET = 'SharedServerClient'
 
   def self.get_headers_path(number_of_bits)
-    "$(PROJECT_DIR)/../iOSStaticLibraries/Curl/include" + "-" + number_of_bits
+    "$(PROJECT_DIR)/../iOSStaticLibraries/Curl/include" + '-' + number_of_bits
   end
 end

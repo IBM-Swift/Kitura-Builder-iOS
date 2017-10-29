@@ -15,7 +15,7 @@
 gem 'xcodeproj'
 require 'xcodeproj'
 
-def append_to_build_settings(target,mode,setting,value)
+def append_to_build_settings(target, mode, setting, value)
     if target.build_settings(mode)[setting].kind_of?(Array)
         target.build_settings(mode)[setting].push(value)
     else
@@ -23,14 +23,14 @@ def append_to_build_settings(target,mode,setting,value)
     end
 end
 
-def append_to_build_setting_all_modes(target,setting,value)
-    target.build_configuration_list.build_configurations.each { |configuration|
-      append_to_build_settings(target,configuration.name,setting,value)
-    }
+def append_to_build_setting_all_modes(target, setting, value)
+    target.build_configuration_list.build_configurations.each do |configuration|
+      append_to_build_settings(target,configuration.name, setting, value)
+    end
 end
 
 def fix_build_settings_of_target(target, headers_path, library_path)
-    append_to_build_setting_all_modes(target,"HEADER_SEARCH_PATHS",headers_path)
-    append_to_build_setting_all_modes(target,"OTHER_LDFLAGS","-lz")
-    append_to_build_setting_all_modes(target,"LIBRARY_SEARCH_PATHS",library_path)
+    append_to_build_setting_all_modes(target, 'HEADER_SEARCH_PATHS', headers_path)
+    append_to_build_setting_all_modes(target, 'OTHER_LDFLAGS','-lz')
+    append_to_build_setting_all_modes(target, 'LIBRARY_SEARCH_PATHS', library_path)
 end
