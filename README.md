@@ -1,4 +1,4 @@
-![Kitura Builder for iOS](https://raw.githubusercontent.com/IBM-Swift/Kitura-Builder-iOS/master/Documentation/KituraIOS.jpg)
+![Kitura Builder for iOS](https://raw.githubusercontent.com/IBM-Swift/Kitura-Builder-iOS/master/Documentation/KituraIOSSoftwareEngineering_1024X512.png)
 
 # Bash and Ruby scripts to facilitate running Kitura on iOS
 Used as a submodule by [Kitura HelloWorld/iOS](https://github.com/IBM-Swift/Kitura-HelloWorld-iOS) and [Kitura Sample/iOS](https://github.com/IBM-Swift/Kitura-Sample-iOS).
