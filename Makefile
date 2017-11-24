@@ -28,6 +28,8 @@ prepareXcodeAll: iOSStaticLibraries/Curl ServerSide/Package.swift ClientSide/Cli
 	cd ServerSide && swift package generate-xcodeproj
 	@echo ——- Fixing Xcode projects
 	-${KITURA_IOS_BUILD_SCRIPTS_DIR}/fixXcodeProjects.sh ${NUMBER_OF_BITS}
+	ruby ${KITURA_IOS_BUILD_SCRIPTS_DIR}/set_deployment_version.rb ClientSide/ClientSide.xcodeproj ${DEPLOYMENT_OS}
+	ruby ${KITURA_IOS_BUILD_SCRIPTS_DIR}/set_deployment_version.rb ServerSide/*.xcodeproj ${DEPLOYMENT_OS}
 	@echo ——- Creating EndToEnd Xcode workspace
 	rm -rf EndToEnd.xcworkspace
 	-ruby ${KITURA_IOS_BUILD_SCRIPTS_DIR}/create_xcode_workspace.rb ClientSide/*.xcodeproj ServerSide/*.xcodeproj SharedServerClient/*.xcodeproj
