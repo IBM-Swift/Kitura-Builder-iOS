@@ -18,6 +18,7 @@ class Constants
   KITURA_NET = 'KituraNet'
   CLIENT_SIDE_MAIN_TARGET = 'ClientSide'
   SHARED_SERVER_CLIENT_SIDE_MAIN_TARGET = 'SharedServerClient'
+  LINKED_LIBRARIES = ["z"] # libz used by curl
 
   def self.get_headers_path(number_of_bits)
     "$(PROJECT_DIR)/../iOSStaticLibraries/Curl/include" + '-' + number_of_bits

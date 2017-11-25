@@ -30,7 +30,7 @@ def fix_shared_client_server_project(shared_server_client_project, server_projec
   shared_server_client_target_to_fix =
     get_first_target_by_name(shared_server_client_project, shared_server_client_name_to_fix)
   fix_build_settings_of_target(shared_server_client_target_to_fix, libraries.headers_path,
-                               libraries.library_path)
+                               libraries.library_path, libraries.linked_libraries)
 end
 
 server_project_file = ARGV[0]

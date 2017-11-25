@@ -46,7 +46,8 @@ def fix_server_project(server_project, main_module, kitura_net, libraries)
   end
 
   #Add headers
-  fix_build_settings_of_target(kitura_net_target, libraries.headers_path, libraries.library_path)
+  fix_build_settings_of_target(kitura_net_target, libraries.headers_path, libraries.library_path,
+                               libraries.linked_libraries)
 
   #Add library
   build_phase = kitura_net_target.frameworks_build_phase

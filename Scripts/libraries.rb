@@ -32,4 +32,8 @@ class Libraries
   def headers_path
     Constants.get_headers_path(@number_of_bits)
   end
+
+  def linked_libraries
+    Constants::LINKED_LIBRARIES
+  end
 end

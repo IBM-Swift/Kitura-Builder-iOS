@@ -32,7 +32,8 @@ def fix_client_project(client_project, server_project, shared_server_client_proj
                             client_embed_frameworks_build_phase, client_framework_group)
 
   client_target_to_fix = get_first_target_by_name(client_project, client_target_name_to_fix)
-  fix_build_settings_of_target(client_target_to_fix, libraries.headers_path, libraries.library_path)
+  fix_build_settings_of_target(client_target_to_fix, libraries.headers_path, libraries.library_path,
+                               libraries.linked_libraries)
 end
 
 server_project_file = ARGV[0]
