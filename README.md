@@ -10,3 +10,6 @@ Uses [xcodeproj ruby gem](https://github.com/cocoapods/xcodeproj).
 [![codebeat badge](https://codebeat.co/badges/bdbb3830-206d-401a-8e1d-24f879256e61)](https://codebeat.co/projects/github-com-ibm-swift-kitura-builder-ios-master)
 [![Code Climate](https://codeclimate.com/github/IBM-Swift/Kitura-Builder-iOS/badges/gpa.svg)](https://codeclimate.com/github/IBM-Swift/Kitura-Builder-iOS)
 &nbsp;[![Slack Status](http://swift-at-ibm-slack.mybluemix.net/badge.svg)](http://swift-at-ibm-slack.mybluemix.net/)
+
+# Publications
+See https://developer.ibm.com/swift/2017/12/08/kitura-ios-part2/ .
