@@ -19,12 +19,7 @@ endif
 all: prepareXcode
 
 prepareXcodeAll: iOSStaticLibraries/Curl ServerSide/Package.swift ClientSide/ClientSide.xcodeproj
-	rm -f ServerSide/.build/checkouts/Kitura-net.git--*/Sources/CHTTPParser/include/module.modulemap
 	@echo --- Generating ServerSide Xcode project
-	cd ServerSide && swift package generate-xcodeproj
-	cp ServerSide/*.xcodeproj/GeneratedModuleMap/CHTTPParser/module.modulemap \
-		ServerSide/.build/checkouts/Kitura-net.git--*/Sources/CHTTPParser/include/
-# regenerate xcode project with the generated module map
 	cd ServerSide && swift package generate-xcodeproj
 	@echo ——- Fixing Xcode projects
 	-${KITURA_IOS_BUILD_SCRIPTS_DIR}/fixXcodeProjects.sh ${NUMBER_OF_BITS}
