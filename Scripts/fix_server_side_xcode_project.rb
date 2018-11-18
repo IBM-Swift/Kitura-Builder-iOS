@@ -33,27 +33,27 @@ def remove_product(project, moduleName)
     end
 end
 
-def fix_server_project(server_project, main_module, kitura_net, libraries)
+def fix_server_project(server_project, main_module, libraries)
   remove_target(server_project, main_module)
   remove_product(server_project, main_module)
 
-  kitura_net_target = get_first_target_by_name(server_project, kitura_net)
-
-  server_project.targets.select do |target|
+  server_project.targets.each do |target|
     target.build_configuration_list.build_configurations.each do |configuration|
       configuration.build_settings.delete('SUPPORTED_PLATFORMS')
     end
+
+    #Add headers
+    fix_build_settings_of_target(target, libraries.headers_path, libraries.library_path,
+                                 libraries.linked_libraries)
+
+    #Add library
+    if target.is_a? Xcodeproj::Project::Object::PBXNativeTarget
+         build_phase = target.frameworks_build_phase
+         framework_group = server_project.frameworks_group
+         library_reference = framework_group.new_reference(libraries.library_file_path)
+         build_phase.add_file_reference(library_reference)
+    end
   end
-
-  #Add headers
-  fix_build_settings_of_target(kitura_net_target, libraries.headers_path, libraries.library_path,
-                               libraries.linked_libraries)
-
-  #Add library
-  build_phase = kitura_net_target.frameworks_build_phase
-  framework_group = server_project.frameworks_group
-  library_reference = framework_group.new_reference(libraries.library_file_path)
-  build_phase.add_file_reference(library_reference)
 end
 
 server_project_file = ARGV[0]
@@ -61,6 +61,6 @@ main_module = ARGV[1]
 number_of_bits = ARGV[2]
 
 server_project = Xcodeproj::Project.open(server_project_file)
-fix_server_project(server_project, main_module, Constants::KITURA_NET, Libraries.new(number_of_bits))
+fix_server_project(server_project, main_module, Libraries.new(number_of_bits))
 
 server_project.save
